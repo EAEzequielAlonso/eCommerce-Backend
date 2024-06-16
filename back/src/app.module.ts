@@ -1,14 +1,26 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
-import { ProductsModule } from './Products/Products.module';
-import { AuthModule } from './Auth/Auth.module';
-import { UserModule } from './Users/Users.module';
-import { UserDataMiddleware } from './Users/user.middleware';
-import { AuthMiddleware } from './Auth/auth.middleware';
-import { ProductDataMiddleware } from './Products/Product.middleware';
+import { ProductsModule } from './Modules/Products/Products.module';
+import { AuthModule } from './Modules/Auth/Auth.module';
+import { UserModule } from './Modules/Users/Users.module';
+import { UserDataMiddleware } from './Modules/Users/user.middleware';
+import { AuthMiddleware } from './Modules/Auth/auth.middleware';
+import { ProductDataMiddleware } from './Modules/Products/Product.middleware';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import typeOrmConfig from "./config/typeorm"
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 
 @Module({
-  imports: [ProductsModule, AuthModule, UserModule],
+  imports: [
+      ConfigModule.forRoot({
+         isGlobal: true,
+         load: [typeOrmConfig]
+         }),
+      TypeOrmModule.forRootAsync({
+         inject:[ConfigService],
+         useFactory: (configService: ConfigService) => configService.get("typeorm"), 
+         }),
+      ProductsModule, AuthModule, UserModule],
   controllers: [],
   providers: [],
 })

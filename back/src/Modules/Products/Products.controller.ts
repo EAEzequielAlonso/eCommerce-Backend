@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UseGu
 import { ProductsService } from "./Products.service";
 import { ProductDto } from "./Products.dto";
 import { Product } from "./Products.interface";
-import { AuthGuard } from "src/Auth/Auth.guard";
+import { AuthGuard } from "src/Modules/Auth/Auth.guard";
 
 @Controller ("products")
 export class ProductsController {

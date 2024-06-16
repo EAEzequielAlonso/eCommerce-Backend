@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UseGu
 import { UsersService } from "./Users.service";
 import { UserDto } from "./User.dto";
 import { User } from "./User.interface";
-import { AuthGuard } from "src/Auth/Auth.guard";
+import { AuthGuard } from "src/Modules/Auth/Auth.guard";
 
 @Controller ("users")
 export class UsersController {
