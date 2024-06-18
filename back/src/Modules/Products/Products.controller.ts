@@ -30,6 +30,11 @@ export class ProductsController {
         return this.productsService.createProduct(productDto);
     }
 
+    @Post("seeder")
+    preloadProductsSeed () {
+        return this.productsService.preloadProductsSeed();
+    }
+
     @Put(":id")
     @UseGuards(AuthGuard)
     @HttpCode(200)

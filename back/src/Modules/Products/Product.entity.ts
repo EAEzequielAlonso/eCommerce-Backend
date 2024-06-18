@@ -13,7 +13,7 @@ export class Product {
     name: string
 
     @Column({length:50, nullable:false})
-    desription: string
+    description: string
 
     @Column('decimal', { precision: 10, scale: 2, nullable: false })
     price: number
@@ -21,7 +21,7 @@ export class Product {
     @Column({nullable:false})
     stock: number
 
-    @Column()
+    @Column({default: 'https://static.vecteezy.com/system/resources/previews/006/411/071/non_2x/physical-testing-black-glyph-icon-visual-appearance-analysis-defect-detection-product-weighing-and-measuring-procedure-silhouette-symbol-on-white-space-isolated-illustration-vector.jpg' })
     imgUrl: string
 
     @Column()

@@ -8,6 +8,7 @@ import { ProductDataMiddleware } from './Modules/Products/Product.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeOrmConfig from "./config/typeorm"
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CategoryModule } from './Modules/Categories/Category.module';
 
 
 @Module({
@@ -20,7 +21,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
          inject:[ConfigService],
          useFactory: (configService: ConfigService) => configService.get("typeorm"), 
          }),
-      ProductsModule, AuthModule, UserModule],
+      ProductsModule, AuthModule, UserModule, CategoryModule],
   controllers: [],
   providers: [],
 })

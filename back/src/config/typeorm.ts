@@ -16,6 +16,7 @@ const config = {
     //en un sistema productivo es mejor correr las migraciones por afuera y tener esto en false. ya que en true se hace automaticamente cuando corro mi aplocacion
     synchronize: true, 
     logging:true,
+    dropSchema:true,
 
     // definimos donde estan las entidades
     entities: ["dist/**/*.entity{.ts,.js}"], 
