@@ -116,8 +116,18 @@ export class ProductsService {
     }
         
 
-    getProducts(page:number, limit:number) {
-        return this.productsReposytory.getProducts(page, limit);
+    async getProducts(page:number, limit:number) {
+        //devuelve todos los productos con la relacion explicita de categorias
+        const allProducts: ProductEntity[] = await this.productRepository.find({
+            relations : {
+                category : true,
+            }
+        });
+
+        //implementacion de la paginacion. 
+        const start = (page-1) * limit;
+        const end = page * limit;
+        return allProducts.slice(start, end);
     }
 
     getProductById(id: number) {
