@@ -1,103 +1,23 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "./User.interface";
-import { UserDto } from "./User.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { User } from "./User.entity";
+import { Repository } from "typeorm";
 
 @Injectable()
 export class UsersRepository {
 
-    private id:number = 9;
-    private users: User[] = [
-        {
-            id: 1,
-            name: "Ezequiel Alonso",
-            email: "eze@gmail.com",
-            password: "ezealon.0",
-            address: "Las Camelias 345",
-            phone: "11-68443073",
-            country: "Argentina",
-            city: "Buenos Aires"
-        },
-        {
-            id: 2,
-            name: "Nadia Correia",
-            email: "nadia@gmail.com",
-            password: "nadcor.0",
-            address: "Las Camelias 345",
-            phone: "11-68443073",
-            country: "Argentina",
-            city: "Buenos Aires"
-        },
-        {
-            id: 3,
-            name: "Ailin Alonso",
-            email: "ailin@gmail.com",
-            password: "ailinalon.0",
-            address: "Las Camelias 345",
-            phone: "11-68443073",
-            country: "Argentina",
-            city: "Buenos Aires"
-        },
-        {
-            id: 4,
-            name: "Ailin Alonso",
-            email: "ailin@gmail.com",
-            password: "ailinalon.0",
-            address: "Las Camelias 345",
-            phone: "11-68443073",
-            country: "Argentina",
-            city: "Buenos Aires"
-        },
-        {
-            id: 5,
-            name: "Ailin Alonso",
-            email: "ailin@gmail.com",
-            password: "ailinalon.0",
-            address: "Las Camelias 345",
-            phone: "11-68443073",
-            country: "Argentina",
-            city: "Buenos Aires"
-        },
-        {
-            id: 6,
-            name: "Ailin Alonso",
-            email: "ailin@gmail.com",
-            password: "ailinalon.0",
-            address: "Las Camelias 345",
-            phone: "11-68443073",
-            country: "Argentina",
-            city: "Buenos Aires"
-        },
-        {
-            id: 7,
-            name: "Ailin Alonso",
-            email: "ailin@gmail.com",
-            password: "ailinalon.0",
-            address: "Las Camelias 345",
-            phone: "11-68443073",
-            country: "Argentina",
-            city: "Buenos Aires"
-        },
-        {
-            id: 8,
-            name: "Ailin Alonso",
-            email: "ailin@gmail.com",
-            password: "ailinalon.0",
-            address: "Las Camelias 345",
-            phone: "11-68443073",
-            country: "Argentina",
-            city: "Buenos Aires"
-        }
-    ]
+    constructor (@InjectRepository(User) private userRepository: Repository<User>) {}
 
-    async getUsers(page: number, limit:number) {
-        const start = (page-1) * limit;
-        const end = page * limit;
-        const userPaginated = await this.users.slice(start, end)
-        return userPaginated;
+
+    async getUsers(page: number, limit:number): Promise<User[]> {
+        const start:number = (page-1) * limit;
+        const end:number  = page * limit;
+        const userPaginated:User[] = await this.userRepository.find()
+        return userPaginated.slice(start, end);
     }
 
-    async userLogin (email: string, password:string) {
-        const user = await this.users.find(user => user.email === email);
+    async userLogin (email: string, password:string): Promise<User | string> {
+        const user:User = await this.userRepository.findOne({where: {email}, relations: {orders:true}});
         if (user) {
             if (user.password === password)
                 return user;
@@ -105,26 +25,32 @@ export class UsersRepository {
         return "Email o password incorrectos";
     }
 
-    async getUserById(id: number) {
-        const {name, email, address, phone,country, city} = await this.users.find(user => user.id===id);
-        return {id, name, email, address, phone,country, city};
+    async getUserById(id: string): Promise<Omit<User, "password">> {
+        const userFinded:User = await this.userRepository.findOne({
+            where : {id},
+            relations: {orders: true}
+        });
+        return  userFinded;
     }
 
-    async createUser(user: UserDto):Promise<number> {
-        const newUser:User = {id: this.id++, ...user}
-        await this.users.push(newUser);
+    async createUser(user: User):Promise<string> {
+        const newUser:User = await this.userRepository.create(user);
+        await this.userRepository.save(newUser);
         return newUser.id;
     }
 
-    async updateUser(id: number, user: User) {
-        const index:number = this.users.findIndex(user => user.id === id)
-        this.users[index] = user; 
-        return id;
+    async updateUser(id: string, user: Partial<User>): Promise<string> {
+        let userUpdate: User = await this.userRepository.findOneBy({id})
+        if (userUpdate){
+            userUpdate = {...userUpdate, ...user};
+            await this.userRepository.save(userUpdate);
+            return id;
+        }
     }
 
-    async deleteUser(id: number) {
-        const usersAfterDelete:User[] = this.users.filter(user => user.id !== id)
-        this.users = usersAfterDelete;
-        return id;
+    async deleteUser(id: string): Promise<string> {
+        const userDelete= await this.userRepository.delete(id)
+        if (userDelete.affected===1)
+            return id;
     }
 }

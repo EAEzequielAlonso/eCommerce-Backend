@@ -16,7 +16,7 @@ export class OrderRepository {
         @InjectRepository(OrderDetail) private orderDetailRepository: Repository<OrderDetail> 
     ) {}
 
-    async addOrder(order: OrderDto) {
+    async addOrder(order: OrderDto): Promise<Order | string> {
         const userFinded:User = await this.userRepository.findOneBy({id : order.userId})
         if (userFinded) {
             const OrderCreated:Order = await this.orderRepository.create({date: new Date(), user: userFinded}); 
@@ -34,34 +34,34 @@ export class OrderRepository {
                 }
             }
             if (productsList.length>0) {
-                const OrderDetailCreated = await this.orderDetailRepository.create({price:totalOrder, products:productsList})
+                const OrderDetailCreated:OrderDetail = await this.orderDetailRepository.create({price:totalOrder, products:productsList})
                 OrderCreated.orderDetails= OrderDetailCreated; 
                 await this.orderRepository.save(OrderCreated);
-                return {...OrderCreated, TotalPrice: totalOrder, orderDetailId:OrderDetailCreated.id}
+                const OrderReturn:Order = await this.orderRepository.findOne({
+                    relations: {
+                        orderDetails: true
+                    },
+                    where: {
+                        id: OrderCreated.id
+                    }
+                })
+                return OrderReturn;
             } else {
                 return "Productos inexistentes o sin Stock"
             }
         } else {return "Usuario Inexistente"}
     }
 
-    async getOrder(orderId: string) {
-        const orderRequest = await this.orderRepository.findOneOrFail ({
+    async getOrder(orderId: string): Promise<Order> {
+        const orderRequest:Order = await this.orderRepository.findOne ({
             relations: {
-                orderDetails:true
+                orderDetails: {products: true}
             },
             where: {
                 id: orderId
             }
-        })
-        const orderDetailRequest = await this.orderDetailRepository.findOneOrFail ({
-            relations: {
-                products:true
-            },
-            where: {
-                id: orderRequest.orderDetails.id
-            }
-        })
-        return {order: orderDetailRequest, orderDetail: orderDetailRequest}
+        }) 
+        return orderRequest;
     }
 
 }

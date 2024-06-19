@@ -1,136 +1,149 @@
 import { Injectable } from "@nestjs/common";
-import { ProductDto } from "./Products.dto";
-import { Product } from "./Products.interface";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Product } from "./Product.entity";
+import { Repository } from "typeorm";
+import { Category } from "../Categories/Category.entity";
 
 @Injectable()
 export class ProductsRepository {
 
-    private id:number=13;
-    private products: Product[] = [
-        {
-            id: 1,
-            name: "PcNote",
-            description: "Notebook",
-            price: 100,
-            stock: true,
-            imgUrl: "string"
-        },
-        {
-            id: 2,
-            name: "Celular",
-            description: "Nokia 1100",
-            price: 100,
-            stock: true,
-            imgUrl: "string"
-        },
-        {
-            id: 3,
-            name: "Auricular",
-            description: "Audifono noganet",
-            price: 100,
-            stock: true,
-            imgUrl: "string"
-        },
-        {
-            id: 4,
-            name: "PcNote",
-            description: "Notebook",
-            price: 100,
-            stock: true,
-            imgUrl: "string"
-        },
-        {
-            id: 5,
-            name: "Celular",
-            description: "Nokia 1100",
-            price: 100,
-            stock: true,
-            imgUrl: "string"
-        },
-        {
-            id: 6,
-            name: "Auricular",
-            description: "Audifono noganet",
-            price: 100,
-            stock: true,
-            imgUrl: "string"
-        },
-        {
-            id: 7,
-            name: "PcNote",
-            description: "Notebook",
-            price: 100,
-            stock: true,
-            imgUrl: "string"
-        },
-        {
-            id: 8,
-            name: "Celular",
-            description: "Nokia 1100",
-            price: 100,
-            stock: true,
-            imgUrl: "string"
-        },
-        {
-            id: 9,
-            name: "Auricular",
-            description: "Audifono noganet",
-            price: 100,
-            stock: true,
-            imgUrl: "string"
-        },
-        {
-            id: 10,
-            name: "PcNote",
-            description: "Notebook",
-            price: 100,
-            stock: true,
-            imgUrl: "string"
-        },
-        {
-            id: 11,
-            name: "Celular",
-            description: "Nokia 1100",
-            price: 100,
-            stock: true,
-            imgUrl: "string"
-        },
-        {
-            id: 12,
-            name: "Auricular",
-            description: "Audifono noganet",
-            price: 100,
-            stock: true,
-            imgUrl: "string"
+    constructor(
+        @InjectRepository(Product) private productRepository:Repository<Product>,
+        @InjectRepository(Category) private categoryRepository: Repository<Category>) {}
+
+    async preloadProductsSeed(): Promise<void> {
+        const preloadproductCategories = [
+            {
+            name: "Iphone 15",
+            description: "The best smartphone in the world",
+            price: 199.99,
+            stock: 12,
+            category: "smartphone"
+            },
+            {
+            name: "Samsung Galaxy S23",
+            description: "The best smartphone in the world",
+            price: 150,
+            stock: 12,
+            category: "smartphone"
+            },
+            {
+            name: "Motorola Edge 40",
+            description: "The best smartphone in the world",
+            price: 179.89,
+            stock: 12,
+            category: "smartphone"
+            },
+            {
+            name: "Samsung Odyssey G9",
+            description: "The best monitor in the world",
+            price: 299.99,
+            stock: 12,
+            category: "monitor"
+            },
+            {
+            name: "LG UltraGear",
+            description: "The best monitor in the world",
+            price: 199.99,
+            stock: 12,
+            category: "monitor"
+            },
+            {
+            name: "Acer Predator",
+            description: "The best monitor in the world",
+            price: 150,
+            stock: 12,
+            category: "monitor"
+            },
+            {
+            name: "Razer BlackWidow V3",
+            description: "The best keyboard in the world",
+            price: 99.99,
+            stock: 12,
+            category: "keyboard"
+            },
+            {
+            name: "Corsair K70",
+            description: "The best keyboard in the world",
+            price: 79.99,
+            stock: 12,
+            category: "keyboard"
+            },
+            {
+            name: "Logitech G Pro",
+            description: "The best keyboard in the world",
+            price: 59.99,
+            stock: 12,
+            category: "keyboard"
+            },
+            {
+            name: "Razer Viper",
+            description: "The best mouse in the world",
+            price: 49.99,
+            stock: 12,
+            category: "mouse"
+            },
+            {
+            name: "Logitech G502 Pro",
+            description: "The best mouse in the world",
+            price: 39.99,
+            stock: 12,
+            category: "mouse"
+            },
+            {
+            name: "SteelSeries Rival 3",
+            description: "The best mouse in the world",
+            price: 29.99,
+            stock: 12,
+            category: "mouse"
+            }
+            ];
+        for (const product of preloadproductCategories) {
+            const productoExist:boolean = await this.productRepository.existsBy({name: product.name});
+            if (!productoExist) {   
+                const category:Category = await this.categoryRepository.findOneBy({name: product.category});
+                if (category) {
+                    const productCreate:Product = this.productRepository.create({...product, category_id: category.id, category: category});
+                    await this.productRepository.save(productCreate)
+                }
+            }
         }
-    ]
-
-    async getProducts(page: number, limit:number) {
-        const start = (page-1) * limit;
-        const end = page * limit;
-        const productPaginated = await this.products.slice(start, end)
-        return productPaginated;
+        console.log("Productos cargados con exito");
     }
 
-    async getProductById(id: number) {
-        return await this.products.find(product => product.id===id);
+    async getProducts(page: number, limit:number): Promise<Product[]> {
+        const start:number = (page-1) * limit;
+        const end:number = page * limit;
+        const productPaginated: Product[] = await this.productRepository.find()
+        return productPaginated.slice(start, end);
     }
 
-    async createProduct(product: ProductDto):Promise<number> {
-        const newProduct:Product = {id: this.id++, ...product}
-        this.products.push(newProduct);
+    async getProductById(id: string): Promise<Product> {
+        const productFinded: Product = await this.productRepository.findOne({
+            where : {id},
+            relations: {category: true}
+        });
+        return productFinded;
+    }
+ 
+    async createProduct(product: Product):Promise<string> {
+        const newProduct:Product = await this.productRepository.create(product);
+        await this.productRepository.save(newProduct);
         return newProduct.id;
     }
 
-    async updateProduct(id: number, product: Product) {
-        const index:number = this.products.findIndex(product => product.id === id)
-        this.products[index] = product; 
-        return id;
+    async updateProduct(id: string, product: Partial<Product>): Promise<string> {
+        let productUpdate: Product = await this.productRepository.findOneBy({id})
+        if (productUpdate){
+            productUpdate = {...productUpdate, ...product};
+            await this.productRepository.save(productUpdate);
+            return id;
+        }
     }
 
-    async deleteProduct(id: number) {
-        const productsAfterDelete:Product[] = this.products.filter(product => product.id !== id)
-        this.products = productsAfterDelete;
-        return id;
+    async deleteProduct(id: string): Promise<string> {
+        const productDelete = await this.productRepository.delete(id)
+        if (productDelete.affected===1)
+            return id;
     }
 }

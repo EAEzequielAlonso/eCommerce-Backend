@@ -9,6 +9,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeOrmConfig from "./config/typeorm"
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoryModule } from './Modules/Categories/Category.module';
+import { OrdersModule } from './Modules/Orders/orders.module';
 
 
 @Module({
@@ -21,7 +22,7 @@ import { CategoryModule } from './Modules/Categories/Category.module';
          inject:[ConfigService],
          useFactory: (configService: ConfigService) => configService.get("typeorm"), 
          }),
-      ProductsModule, AuthModule, UserModule, CategoryModule],
+      ProductsModule, AuthModule, UserModule, CategoryModule, OrdersModule],
   controllers: [],
   providers: [],
 })

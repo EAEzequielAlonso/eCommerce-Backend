@@ -6,7 +6,7 @@ export class CategoryController {
     constructor(private readonly categoryService: CategoryService) {}
 
     @Post("seeder")
-    preloadCategoriesSeed () {
-        return this.categoryService.preloadCategoriesSeed();
+    async preloadCategoriesSeed (): Promise<void> {
+        return await this.categoryService.preloadCategoriesSeed();
     }
 }

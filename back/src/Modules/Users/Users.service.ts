@@ -1,30 +1,29 @@
 import { Injectable } from "@nestjs/common";
 import { UsersRepository } from "./User.repository";
-import { UserDto } from "./User.dto";
-import { User } from "./User.interface";
+import { User } from "./User.entity";
 
 @Injectable ()
 export class UsersService {
         
-    constructor (private usersReposytory: UsersRepository){}
+    constructor (private readonly usersReposytory: UsersRepository){}
 
-    async getUsers(page:number, limit: number) {
+    async getUsers(page:number, limit: number): Promise<User[]> {
         return await this.usersReposytory.getUsers(page, limit);
     }
 
-    getUserById(id:number) {
-        return this.usersReposytory.getUserById(id);
+    async getUserById(id:string): Promise<Omit<User, "password">> {
+        return await this.usersReposytory.getUserById(id);
     }
 
-    createUser(user: UserDto) {
-        return this.usersReposytory.createUser(user);
+    async createUser(user: User): Promise<string> {
+        return await this.usersReposytory.createUser(user);
     }
 
-    deleteUser(id: number) {
-        return this.usersReposytory.deleteUser(id);
+    async deleteUser(id: string): Promise<string> {
+        return await this.usersReposytory.deleteUser(id);
     }
 
-    updateUser(id: number, user: User) {
-        return this.usersReposytory.updateUser(id, user);
+    async updateUser(id: string, user: Partial<User>): Promise<string> {
+        return await this.usersReposytory.updateUser(id, user);
     }
 }
