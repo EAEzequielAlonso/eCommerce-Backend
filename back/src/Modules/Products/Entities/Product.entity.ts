@@ -1,7 +1,8 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import {v4 as uuid} from "uuid"
-import { Category } from "../Categories/Category.entity";
-import { OrderDetail } from "../OrderDetails/OrderDetail.entity";
+import { Category } from "../../Categories/Category.entity";
+import { OrderDetail } from "../../OrderDetails/OrderDetail.entity";
+import { File } from "src/Modules/files/entities/file.entity";
 
 @Entity({name: "products"})
 export class Product {
@@ -34,4 +35,7 @@ export class Product {
     @JoinTable()
     orderDetails: OrderDetail[]
 
-}
+    @OneToMany(() => File, (File) => File.product)
+    files: File[];
+
+} 

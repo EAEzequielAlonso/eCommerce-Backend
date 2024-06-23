@@ -1,19 +1,24 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { OrderDto } from './order.dto';
-import { Order } from './Order.entity';
+import { CreateOrderDto } from './Dtos/CreateOrder.dto';
+import { Order } from './Entities/Order.entity';
 
 @Controller('orders') 
 export class OrdersController {
     constructor (private readonly ordersService: OrdersService) {}
 
+    @Get()
+    async getOrders (): Promise<Order[]> {
+        return await this.ordersService.getOrders();
+    }
+    
     @Get(":id")
-    async getOrder (@Param("id") id:string): Promise<Order> {
-        return await this.ordersService.getOrder(id);
+    async getOrderById (@Param("id", ParseUUIDPipe) id:string): Promise<Order> {
+        return await this.ordersService.getOrderById(id);
     }
     
     @Post()
-    async addOrder (@Body() order: OrderDto): Promise<Order | string> {
+    async addOrder (@Body() order: CreateOrderDto): Promise<Order | string> {
         return await this.ordersService.addOrder(order);
     } 
 }

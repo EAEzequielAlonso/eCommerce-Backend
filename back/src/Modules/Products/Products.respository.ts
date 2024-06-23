@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Product } from "./Product.entity";
+import { Product } from "./Entities/Product.entity";
 import { Repository } from "typeorm";
 import { Category } from "../Categories/Category.entity";
+import { CreateProductDto } from "./Dtos/CreateProduct.dto";
 
 @Injectable()
 export class ProductsRepository {
@@ -126,15 +127,26 @@ export class ProductsRepository {
         return productFinded;
     }
  
-    async createProduct(product: Product):Promise<string> {
-        const newProduct:Product = await this.productRepository.create(product);
-        await this.productRepository.save(newProduct);
-        return newProduct.id;
+    async createProduct(product: CreateProductDto):Promise<string> {
+        const category:Category = await this.categoryRepository.findOneBy({id : product.category_id})
+        if (category) {
+            const newProduct:Product = await this.productRepository.create(product);
+            newProduct.category = category;
+            await this.productRepository.save(newProduct);
+            return newProduct.id;
+        }else {
+            throw new Error ("La categoria es inexistente")
+        }
     }
 
     async updateProduct(id: string, product: Partial<Product>): Promise<string> {
         let productUpdate: Product = await this.productRepository.findOneBy({id})
         if (productUpdate){
+            if (productUpdate.category_id) {
+                const category: Category = await this.categoryRepository.findOneBy({id: productUpdate.category_id})
+                if (!category) return "No es posible actualizar, La categoria no existe"
+                productUpdate.category = category;
+            }
             productUpdate = {...productUpdate, ...product};
             await this.productRepository.save(productUpdate);
             return id;

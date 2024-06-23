@@ -1,7 +1,7 @@
 import { Column, PrimaryGeneratedColumn, Entity, OneToOne, ManyToOne, JoinColumn } from "typeorm";
 import {v4 as uuid} from "uuid"
-import { User } from "../Users/User.entity";
-import { OrderDetail } from "../OrderDetails/OrderDetail.entity";
+import { User } from "../../Users/Entities/User.entity";
+import { OrderDetail } from "../../OrderDetails/OrderDetail.entity";
 
 @Entity({name: "orders"})
 export class Order {
@@ -20,4 +20,4 @@ export class Order {
     @OneToOne(() => OrderDetail)
     @JoinColumn()
     orderDetails: OrderDetail
-} 
+}  

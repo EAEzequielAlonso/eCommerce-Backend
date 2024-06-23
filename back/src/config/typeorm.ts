@@ -18,12 +18,15 @@ const config = {
     logging:true,
     //dropSchema:true,
 
+    //Para las migraciones
     // definimos donde estan las entidades
     entities: ["dist/**/*.entity{.ts,.js}"], 
 
-    // definimos donde estan las migraciones
+    // definimos donde alojar las migraciones
     migrations: ["dist/migrations/*{.ts,.js}"],
 }
-export default registerAs ("typeorm", () => config) // nospermite tener una clave typeorm que su valor va a ser config
+
+// nospermite tener una clave typeorm que su valor va a ser config
+export default registerAs ("typeorm", () => config) 
 
 export const connectionSource = new DataSource(config as DataSourceOptions)

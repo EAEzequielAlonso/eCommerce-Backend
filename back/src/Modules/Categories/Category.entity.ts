@@ -1,6 +1,6 @@
 import { Column, PrimaryGeneratedColumn, Entity, OneToOne, JoinColumn, OneToMany } from "typeorm";
 import {v4 as uuid} from "uuid"
-import { Product } from "../Products/Product.entity";
+import { Product } from "../Products/Entities/Product.entity";
 
 @Entity({name:"categories"})
 export class Category {
@@ -12,7 +12,7 @@ export class Category {
     name: string
  
     //@OneToOne(() => Product)
-    //@JoinColumn()
+    //@JoinColumn() 
     //product: Product
 
     @OneToMany(() => Product, (product) => product.category)

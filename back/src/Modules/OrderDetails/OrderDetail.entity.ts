@@ -1,7 +1,6 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import {v4 as uuid} from "uuid"
-import { Product } from "../Products/Product.entity";
-import { Order } from "../Orders/Order.entity";
+import { Product } from "../Products/Entities/Product.entity";
 
 @Entity({name: "orderdetails"})
 export class OrderDetail {
@@ -16,4 +15,4 @@ export class OrderDetail {
     @JoinTable()
     products: Product[]
 
-}
+} 

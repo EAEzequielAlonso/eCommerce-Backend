@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "./User.entity";
+import { User } from "./Entities/User.entity";
 import { Repository } from "typeorm";
+import { CreateUserDto } from "./Dtos/CreateUser.dto";
 
 @Injectable()
 export class UsersRepository {
@@ -12,17 +13,9 @@ export class UsersRepository {
     async getUsers(page: number, limit:number): Promise<User[]> {
         const start:number = (page-1) * limit;
         const end:number  = page * limit;
-        const userPaginated:User[] = await this.userRepository.find()
-        return userPaginated.slice(start, end);
-    }
-
-    async userLogin (email: string, password:string): Promise<User | string> {
-        const user:User = await this.userRepository.findOne({where: {email}, relations: {orders:true}});
-        if (user) {
-            if (user.password === password)
-                return user;
-        }
-        return "Email o password incorrectos";
+        const users:User[] = await this.userRepository.find()
+        if (users.length>0) return users.slice(start, end);
+        else throw new NotFoundException("No hay usuarios en la Base de Datos")
     }
 
     async getUserById(id: string): Promise<Omit<User, "password">> {
@@ -30,10 +23,11 @@ export class UsersRepository {
             where : {id},
             relations: {orders: true}
         });
-        return  userFinded;
+        if (userFinded) return  userFinded;
+        else throw new NotFoundException("El usuario buscado no Existe")
     }
 
-    async createUser(user: User):Promise<string> {
+    async createUser(user: CreateUserDto):Promise<string> {
         const newUser:User = await this.userRepository.create(user);
         await this.userRepository.save(newUser);
         return newUser.id;
@@ -45,6 +39,8 @@ export class UsersRepository {
             userUpdate = {...userUpdate, ...user};
             await this.userRepository.save(userUpdate);
             return id;
+        } else {
+            throw new NotFoundException("El usuario a actualizar no Existe")
         }
     }
 
@@ -52,5 +48,6 @@ export class UsersRepository {
         const userDelete= await this.userRepository.delete(id)
         if (userDelete.affected===1)
             return id;
+        else throw new NotFoundException("El usuario a eliminar no Existe")
     }
 }

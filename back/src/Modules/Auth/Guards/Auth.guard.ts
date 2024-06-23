@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 
 const validateCredential= (request: Request) => {
     const auth = request.headers["authorization"];
-    return !!auth;
+    return auth === "Basic:<email>:<password>";
 }
 
 @Injectable()

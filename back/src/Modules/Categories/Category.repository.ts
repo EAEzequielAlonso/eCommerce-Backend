@@ -5,6 +5,9 @@ import { Repository } from "typeorm";
 
 @Injectable() 
 export class CategoryRepository {
+        async getCategories() {
+            return await this.categoryRepository.find();
+        }
 
         constructor(@InjectRepository(Category) private categoryRepository: Repository<Category>){}
 

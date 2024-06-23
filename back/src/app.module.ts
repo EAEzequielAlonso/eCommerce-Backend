@@ -2,14 +2,15 @@ import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ProductsModule } from './Modules/Products/Products.module';
 import { AuthModule } from './Modules/Auth/Auth.module';
 import { UserModule } from './Modules/Users/Users.module';
-import { UserDataMiddleware } from './Modules/Users/user.middleware';
-import { AuthMiddleware } from './Modules/Auth/auth.middleware';
-import { ProductDataMiddleware } from './Modules/Products/Product.middleware';
+import { UserDataMiddleware } from './Modules/Users/Middlewares/user.middleware';
+import { AuthMiddleware } from './Modules/Auth/Middlewares/auth.middleware';
+import { ProductDataMiddleware } from './Modules/Products/Middlewares/Product.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeOrmConfig from "./config/typeorm"
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoryModule } from './Modules/Categories/Category.module';
 import { OrdersModule } from './Modules/Orders/orders.module';
+import { FilesModule } from './Modules/files/files.module';
 
 
 @Module({
@@ -22,12 +23,12 @@ import { OrdersModule } from './Modules/Orders/orders.module';
          inject:[ConfigService],
          useFactory: (configService: ConfigService) => configService.get("typeorm"), 
          }),
-      ProductsModule, AuthModule, UserModule, CategoryModule, OrdersModule],
+      ProductsModule, AuthModule, UserModule, CategoryModule, OrdersModule, FilesModule],
   controllers: [],
   providers: [],
 })
 export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
+ /* configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(UserDataMiddleware)
       .forRoutes(
@@ -43,5 +44,5 @@ export class AppModule {
         { path: 'products', method: RequestMethod.POST },
         { path: 'products/:id', method: RequestMethod.PUT}
       )
-  }
+  }*/
 }
