@@ -21,7 +21,7 @@ export class UsersController {
                 () => this.usersService.getUsers(page, limit),
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Error al mostrar los usuarios"
-            )
+            ) 
         
         /*try { return await this.usersService.getUsers(page, limit);}
         catch (e) {

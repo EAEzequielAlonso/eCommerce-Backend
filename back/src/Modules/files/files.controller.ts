@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator } from '@nestjs/common';
+import { Controller, Post, Body, Param, Put, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseGuards } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/createFile.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '../Auth/Guards/Auth.guard';
 
 @Controller('files')
 export class FilesController {
@@ -13,6 +14,7 @@ export class FilesController {
   }
 
   @Put('uploadImage/:id')
+  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor("file"))
   updateImage(@Param('id') id: string, @UploadedFile(
     new ParseFilePipe({
