@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ProductsRepository } from "./Products.respository";
 import { Product } from "./Entities/Product.entity";
 import { CreateProductDto } from "./Dtos/CreateProduct.dto";
+import { UpdateProductDto } from "./Dtos/UpdateProduct.dto";
 
 @Injectable () 
 export class ProductsService {
@@ -24,7 +25,7 @@ export class ProductsService {
         return await this.productsRepository.createProduct(product);
     }
 
-    async updateProduct(id: string, product: Partial<Product>): Promise<string> {
+    async updateProduct(id: string, product: UpdateProductDto): Promise<string> {
         return await this.productsRepository.updateProduct(id, product);
     }
 

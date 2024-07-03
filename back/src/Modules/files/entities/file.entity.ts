@@ -1,5 +1,5 @@
 import {Entity, Column, PrimaryGeneratedColumn, JoinColumn, ManyToOne} from "typeorm"
-import { Product } from "src/Modules/Products/Entities/Product.entity"; 
+import { Product } from "../../Products/Entities/Product.entity"; 
 import {v4 as uuid} from "uuid"
 
 @Entity({name:"files"})

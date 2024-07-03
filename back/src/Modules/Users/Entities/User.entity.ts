@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import {v4 as uuid} from "uuid"
 import { Order } from "../../Orders/Entities/Order.entity";
+import { ApiProperty } from "@nestjs/swagger";
 
 @Entity({name: "users"})
 export class User {
@@ -13,9 +14,12 @@ export class User {
 
     @Column({length:50, nullable:false, unique:true})
     email: string
-
+ 
     @Column({nullable:false})
     password: string 
+
+    @Column({default: false})
+    isAdmin: boolean
 
     @Column("int")
     phone: number 

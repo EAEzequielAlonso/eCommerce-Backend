@@ -4,6 +4,7 @@ import { Product } from "./Entities/Product.entity";
 import { Repository } from "typeorm";
 import { Category } from "../Categories/Category.entity";
 import { CreateProductDto } from "./Dtos/CreateProduct.dto";
+import { UpdateProductDto } from "./Dtos/UpdateProduct.dto";
 
 @Injectable()
 export class ProductsRepository {
@@ -139,7 +140,7 @@ export class ProductsRepository {
         }
     }
 
-    async updateProduct(id: string, product: Partial<Product>): Promise<string> {
+    async updateProduct(id: string, product: UpdateProductDto): Promise<string> {
         let productUpdate: Product = await this.productRepository.findOneBy({id})
         if (productUpdate){
             if (productUpdate.category_id) {

@@ -29,7 +29,8 @@ import { JwtModule } from '@nestjs/jwt';
         global: true,
         signOptions: {expiresIn : "1h"},
         secret: process.env.JWT_SECRET,
-      })],
+      }),
+      ],
   controllers: [],
   providers: [],
 })
