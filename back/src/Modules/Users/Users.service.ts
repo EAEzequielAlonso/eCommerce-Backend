@@ -20,7 +20,7 @@ export class UsersService {
         else throw new NotFoundException("El usuario buscado no Existe")
     }
 
-    async createUser(user: CreateUserDto): Promise<string> {
+    async createUser(user: Partial<CreateUserDto>): Promise<string> {
         const newUser:User = await this.usersReposytory.createUser(user);
         if (newUser) return newUser.id;
         else throw new InternalServerErrorException("Error al intentar Crear y guardar el Usuario")

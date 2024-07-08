@@ -8,6 +8,9 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "up": "docker compose up -d",
+    "stop": "docker compose stop",
+    "rm": "docker compose rm",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -33,6 +36,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.4.0",
     "@nestjs/typeorm": "^10.0.2",
+    "@types/bcrypt": "^5.0.2",
     "@types/multer": "^1.4.11",
     "bcrypt": "^5.1.1",
     "buffer-to-stream": "^1.0.0",

@@ -13,7 +13,7 @@ export class AuthService {
         return await this.authRepository.signin(userLogin);
     }
 
-    signup(user: CreateUserDto & { passwordConfirm: string; }): Promise<Omit<User, "password">> {
-        return this.authRepository.signup(user);
+    async signup(user: CreateUserDto): Promise<Omit<User, "password">> {
+        return await this.authRepository.signup(user);
     }
 }

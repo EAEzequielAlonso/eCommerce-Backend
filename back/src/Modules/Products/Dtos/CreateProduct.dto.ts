@@ -49,7 +49,7 @@ export class CreateProductDto {
     @IsString()
     @ApiProperty({
         description: "La Categoria del producto es Obligatoria. Es el UUID de la categoria del Producto",
-        example: "123ui-456poiu-456ñl5-456gft",
+        example: "28aefc82-082b-4222-9577-3096266a9c90",
     })
     category_id: string
 }

@@ -40,15 +40,15 @@ export class UsersController {
         })
     }
 
-    @Post()
-    @HttpCode(201)
-    async createUser(@Body() user:CreateUserDto):Promise<string> {
+    // @Post()
+    // @HttpCode(201)
+    // async createUser(@Body() user:CreateUserDto):Promise<string> {
 
-        return ErrorManager ({
-            functionTry:() => this.usersService.createUser(user), 
-            message: "Error al Intentar Crear el Usuario"
-        }) 
-    }
+    //     return ErrorManager ({
+    //         functionTry:() => this.usersService.createUser(user), 
+    //         message: "Error al Intentar Crear el Usuario"
+    //     }) 
+    // }
 
     @ApiBearerAuth()
     @Put(":id")

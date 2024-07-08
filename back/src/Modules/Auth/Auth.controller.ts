@@ -20,8 +20,7 @@ export class AuthController {
     }
 
     @Post("signup")
-    async signup (@Body() user:CreateUserDto & {passwordConfirm: string}): Promise<Omit<User, "password">> {
-
+    async signup (@Body() user:CreateUserDto): Promise<Omit<User, "password">> {
         return ErrorManager ({
             functionTry: () => this.authService.signup(user), 
             message: "Error al intentar Registrar el Usuario"})

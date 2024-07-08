@@ -15,7 +15,7 @@ export class CreateUserDto {
     @IsEmail()
     @ApiProperty({
         description: "El email de usuario es obligatorio y debe ser valido",
-        example: "Hernesto Harris",
+        example: "harris@gmail.com",
     })
     email: string
 
@@ -31,8 +31,20 @@ export class CreateUserDto {
     })
     password: string
 
-    @IsBoolean()
+    @IsString() 
+    @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/, {
+        message: 'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character (!@#$%^&*).',
+    })
+    @MinLength(8, {message: 'Password must be at least 8 characters long.' })
+    @MaxLength(15, {message: 'Password must not exceed 15 characters.' })
+    @ApiProperty({
+        description: "El password de Confirmacion es obligaorio, debe ser igual al password",
+        example: "2024@Hernesto",
+    })
+    passwordConfirm: string
+
     @IsEmpty()
+    @IsOptional()
     @ApiProperty({
         description: "Este campo indica si el usuario es Administrador o no. Por default es 'false'. No es Obligatorio",
         default: false,

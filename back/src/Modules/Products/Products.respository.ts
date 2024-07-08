@@ -13,6 +13,8 @@ export class ProductsRepository {
         @InjectRepository(Product) private productRepository:Repository<Product>,
         @InjectRepository(Category) private categoryRepository: Repository<Category>) {}
 
+
+        //import * as data from '../../data.json';
     async preloadProductsSeed(): Promise<void> {
         const preloadproductCategories = [
             {

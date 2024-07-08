@@ -39,7 +39,7 @@ async function bootstrap() {
       
   //creo el documento. le asigno la ruta "api" 
   const document = SwaggerModule.createDocument(app, swaggerConfig)
-  SwaggerModule.setup("API", app, document)
+  SwaggerModule.setup("api", app, document)
 
   await app.listen(3001);
 }

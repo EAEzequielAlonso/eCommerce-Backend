@@ -24,7 +24,13 @@ export class UsersRepository {
             relations: {orders: true}}); 
     }
 
-    async createUser(user: CreateUserDto):Promise<User> {
+    async getUserByEmail(email: string): Promise<User> {
+        return await this.userRepository.findOne({
+            where : {email}
+        }); 
+    }
+
+    async createUser(user: Partial<CreateUserDto>):Promise<User> {
         return await this.userRepository.save(user);
     }
 
