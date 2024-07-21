@@ -17,7 +17,7 @@ export class UpdateUserDto {
     @IsOptional()
     @ApiPropertyOptional({
         description: "El email debe ser valido. Es opcional",
-        example: "Hernesto Harris",
+        example: "harris@gmail.com",
     })
     email: string
 

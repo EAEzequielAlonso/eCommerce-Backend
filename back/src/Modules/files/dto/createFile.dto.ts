@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Product } from "src/Modules/Products/Entities/Product.entity";
+import { Product } from "../../Products/Entities/Product.entity";
 
 export class CreateFileDto {
 

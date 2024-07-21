@@ -1,7 +1,7 @@
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import {v4 as uuid} from "uuid"
 import { Category } from "../../Categories/Category.entity";
-import { OrderDetail } from "../../OrderDetails/OrderDetail.entity";
+import { OrderDetail } from "../../Orders/Entities/OrderDetail.entity";
 import { File } from "../../files/entities/file.entity";
 
 @Entity({name: "products"})
@@ -16,7 +16,7 @@ export class Product {
     @Column({length:50, nullable:false})
     description: string
 
-    @Column('decimal', { precision: 10, scale: 2, nullable: false })
+    @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
     price: number
 
     @Column({nullable:false})
@@ -24,18 +24,14 @@ export class Product {
 
     @Column({default: 'https://static.vecteezy.com/system/resources/previews/006/411/071/non_2x/physical-testing-black-glyph-icon-visual-appearance-analysis-defect-detection-product-weighing-and-measuring-procedure-silhouette-symbol-on-white-space-isolated-illustration-vector.jpg' })
     imgUrl: string
-
-    @Column()
-    category_id: string
-
+    
     @ManyToOne(() => Category, (category) => category.products)
     category: Category
 
-    @ManyToMany(() => OrderDetail)
-    @JoinTable()
-    orderDetails: OrderDetail[]
-
     @OneToMany(() => File, (File) => File.product)
     files: File[];
+
+    @ManyToMany(() => OrderDetail, orderDetail => orderDetail.products)
+    orderDetails: OrderDetail[];
 
 } 

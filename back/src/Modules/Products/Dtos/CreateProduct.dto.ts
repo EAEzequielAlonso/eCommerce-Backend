@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger"
 import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator"
+import { Category } from "../../Categories/Category.entity"
 
 export class CreateProductDto {
     @IsNotEmpty()
@@ -45,11 +46,12 @@ export class CreateProductDto {
     })
     imgUrl: string
 
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty({
-        description: "La Categoria del producto es Obligatoria. Es el UUID de la categoria del Producto",
-        example: "28aefc82-082b-4222-9577-3096266a9c90",
+    @ApiPropertyOptional({
+        description: "esta es la categoria a la que pertenece el producto",
+        example: {id: "123ew-123ert-456ytr-345ty-1234rttyu",
+                name: "SmartPhone",
+                },
     })
-    category_id: string
+    category: Category;
+
 }

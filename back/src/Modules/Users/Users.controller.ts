@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Pu
 import { UsersService } from "./Users.service";
 import { AuthGuard } from "../Auth/Guards/Auth.guard";
 import { User } from "./Entities/User.entity";
-import { CreateUserDto } from "./Dtos/CreateUser.dto";
 import { UpdateUserDto } from "./Dtos/UpdateUser.dto";
 import { ErrorManager } from "../../Utils/ErrorManager";
 import { Role } from "./Roles/roles.enum";
@@ -71,5 +70,15 @@ export class UsersController {
             functionTry: () => this.usersService.deleteUser(id), 
             message: "Error al Intentar Eliminar el Usuario"
         }) 
+    }
+
+    @Post("seeder")
+    @HttpCode(201)
+    async preloadUsersSeed(): Promise<string> {
+       
+        return ErrorManager ({
+            functionTry: () => this.usersService.preloadUsersSeed(), 
+            message: "Error al Intentar hacer la precarga de usuarios"
+        })
     }
 }

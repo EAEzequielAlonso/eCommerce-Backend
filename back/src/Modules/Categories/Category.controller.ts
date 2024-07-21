@@ -1,6 +1,6 @@
-import { Controller, Get, HttpStatus, Post} from "@nestjs/common";
+import { Controller, Get, HttpCode, HttpStatus, Post} from "@nestjs/common";
 import { CategoryService } from "./Category.service";
-import { ErrorManager } from "src/Utils/ErrorManager";
+import { ErrorManager } from "../../Utils/ErrorManager";
 import { ApiTags } from "@nestjs/swagger";
 
 @ApiTags("Categories")
@@ -9,6 +9,7 @@ export class CategoryController {
     constructor(private readonly categoryService: CategoryService) {}
 
     @Get()
+    @HttpCode(200)
     async getCategories() {
 
         return ErrorManager ({
@@ -17,7 +18,8 @@ export class CategoryController {
     }
     
     @Post("seeder")
-    async preloadCategoriesSeed (): Promise<void> {
+    @HttpCode(201)
+    async preloadCategoriesSeed (): Promise<string> {
         
         return ErrorManager ({
             functionTry: () => this.categoryService.preloadCategoriesSeed(), 

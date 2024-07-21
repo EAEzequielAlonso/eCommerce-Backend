@@ -1,5 +1,6 @@
 import { ApiPropertyOptional } from "@nestjs/swagger"
 import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator"
+import { Category } from "../../Categories/Category.entity"
 
 export class UpdateProductDto {
     @IsNotEmpty()
@@ -49,12 +50,11 @@ export class UpdateProductDto {
     })
     imgUrl: string
 
-    @IsNotEmpty()
-    @IsString()
     @IsOptional()
     @ApiPropertyOptional({
-        description: "La Categoria del producto es Obligatoria. Es el UUID de la categoria del Producto",
-        example: "28aefc82-082b-4222-9577-3096266a9c90",
+        description: "La Imagen del producto es Opcional. Es la Url donde se aloja la imagen del producto",
+        example: "http://nombreDeDominio/producto.webp",
     })
-    category_id: string
+    category: Category;
+
 }

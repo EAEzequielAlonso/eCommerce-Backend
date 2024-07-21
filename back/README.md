@@ -32,6 +32,30 @@
 $ npm install
 ```
 
+## Variables de entorno necesarias
+
+```crear archivo ".env" (en el directorio raiz)
+
+DB_NAME
+DB_HOST
+DB_PORT
+DB_USERNAME
+DB_PASSWORD
+CLOUDINARY_CLOUD_NAME
+CLOUDINARY_API_SECRET
+CLOUDINARY_API_KEY
+JWT_SECRET
+POSTGRES_DB
+POSTGRES_PASSWORD
+
+```
+
+## Migraciones
+
+```bash
+$ npm install
+```
+
 ## Running the app
 
 ```bash

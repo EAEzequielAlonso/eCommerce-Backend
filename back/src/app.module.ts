@@ -16,20 +16,24 @@ import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
+      // entender bien que pasa aca.
       ConfigModule.forRoot({
          isGlobal: true,
          load: [typeOrmConfig]
          }),
-      TypeOrmModule.forRootAsync({
+      // y aca tambien entender bien que estoy haciendo
+      TypeOrmModule.forRootAsync({ 
          inject:[ConfigService],
          useFactory: (configService: ConfigService) => configService.get("typeorm"), 
          }),
-      ProductsModule, AuthModule, UserModule, CategoryModule, OrdersModule, FilesModule,
+
+      // modulo para generar los token
       JwtModule.register({
         global: true,
         signOptions: {expiresIn : "1h"},
         secret: process.env.JWT_SECRET,
       }),
+      ProductsModule, AuthModule, UserModule, CategoryModule, OrdersModule, FilesModule,
       ],
   controllers: [],
   providers: [],

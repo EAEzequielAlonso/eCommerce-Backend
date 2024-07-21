@@ -1,6 +1,4 @@
 import { ArrayNotEmpty, IsArray, IsNotEmpty, IsUUID, ValidateNested } from "class-validator"
-import { Product } from "../../Products/Entities/Product.entity";
-import { Type } from "class-transformer";
 import {v4 as uuid} from "uuid";
 import { ApiProperty } from "@nestjs/swagger";
 

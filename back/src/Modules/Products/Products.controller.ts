@@ -8,7 +8,8 @@ import { Roles } from "../Users/Roles/roles.decorator";
 import { Role } from "../Users/Roles/roles.enum";
 import { RolesGuard } from "../Users/Roles/roles.guard";
 import { ErrorManager } from "../../Utils/ErrorManager";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiHeader, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { seedResponseDto } from "./Dtos/seedResponse.dto";
 
 @ApiTags("Products")
 @Controller ("products")
@@ -17,6 +18,8 @@ export class ProductsController {
 
     @Get()
     @HttpCode(200)
+    @ApiNotFoundResponse({description:"No hay productos en la Base de Datos"})
+    @ApiInternalServerErrorResponse({description: "Error al intentar mostrar los productos"})
     async getProducts(
         @Query("page") page:number = 1,
         @Query("limit") limit:number = 5,
@@ -30,6 +33,9 @@ export class ProductsController {
 
     @Get(":id")
     @HttpCode(200)
+    @ApiNotFoundResponse({description:"El producto buscado no existe"})
+    @ApiInternalServerErrorResponse({description: "Error al intentar mostrar el producto"})
+    @ApiBadRequestResponse({description: "Validation failed (uuid is expected)"})
     async getProductById(@Param("id", ParseUUIDPipe) id: string): Promise<Product> {
 
         return ErrorManager ({
@@ -42,6 +48,10 @@ export class ProductsController {
     @Post() 
     @UseGuards(AuthGuard)
     @HttpCode(201)
+    @ApiUnauthorizedResponse({description: "Si no se envia el token: 'No se ha encontrado el Bearer token' // Si el token no es valido: 'El Token es Invalido'"})
+    @ApiBadRequestResponse({description: "Se mostrara la lista de todos los datos mal ingresados"})
+    @ApiNotFoundResponse({description: "La categoria asignada al producto no existe"})
+    @ApiInternalServerErrorResponse({description: "Error al intentar crear el producto"})
     async createProduct(@Body() product: CreateProductDto): Promise<string> {
 
         return ErrorManager ({
@@ -51,7 +61,9 @@ export class ProductsController {
     }
 
     @Post("seeder")
-    async preloadProductsSeed (): Promise<void> {
+    @HttpCode(201)
+    @ApiInternalServerErrorResponse({description: "Error al intentar ejecutar la precarga de Productos"})
+    async preloadProductsSeed (): Promise<seedResponseDto> {
 
         return ErrorManager ({
             functionTry: () => this.productsService.preloadProductsSeed(), 
@@ -64,6 +76,10 @@ export class ProductsController {
     @Roles(Role.Admin)
     @UseGuards(AuthGuard, RolesGuard)
     @HttpCode(200)
+    @ApiInternalServerErrorResponse({description: "Error al intentar actualizar el producto"})
+    @ApiNotFoundResponse({description:"El producto que intenta actualizar no existe"})
+    @ApiForbiddenResponse({description: "No tienes permiso ni acceso a esta ruta"})
+    @ApiUnauthorizedResponse({description: "Si no se envia el token: 'No se ha encontrado el Bearer token' // Si el token no es valido: 'El Token es Invalido'"})
     async updateProduct(@Param("id", ParseUUIDPipe) id: string, @Body() product: UpdateProductDto): Promise<string> {
 
         return ErrorManager ({
@@ -76,6 +92,9 @@ export class ProductsController {
     @Delete(":id")
     @UseGuards(AuthGuard)
     @HttpCode(200)
+    @ApiInternalServerErrorResponse({description: "Error al intentar eliminar el Producto"})
+    @ApiNotFoundResponse({description:"El producto que intenta eliminar no existe"})
+    @ApiUnauthorizedResponse({description: "Si no se envia el token: 'No se ha encontrado el Bearer token' // Si el token no es valido: 'El Token es Invalido'"})
     async deleteProduct(@Param("id", ParseUUIDPipe) id: string): Promise<string> {
 
         return ErrorManager ({

@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { Order } from "./Entities/Order.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Product } from "../Products/Entities/Product.entity";
-import { OrderDetail } from "../OrderDetails/OrderDetail.entity";
+import { OrderDetail } from "./Entities/OrderDetail.entity";
 import { User } from "../Users/Entities/User.entity";
 import { CreateOrderDto } from "./Dtos/CreateOrder.dto";
 
@@ -39,12 +39,15 @@ export class OrderRepository {
                         totalOrder = totalOrder + Number(productFinded.price);
                         await this.productRepository.save( productFinded );
                     }
-                }
+                } 
             }
-            if (productsList.length>0) {
-                console.log(totalOrder)
+            if (productsList) {
                 const OrderDetailCreated:OrderDetail = await this.orderDetailRepository.create({price:totalOrder, products:productsList})
                 await this.orderDetailRepository.save(OrderDetailCreated);
+                console.log("ste es el orderDital de un producto con relacion: ", await this.productRepository.findOne({
+                    where: {id: productsList[0].id}, 
+                    relations: {orderDetails: true}
+                }))
                 OrderCreated.orderDetails= OrderDetailCreated; 
                 await this.orderRepository.save(OrderCreated);
                 const OrderReturn:Order = await this.orderRepository.findOne({
@@ -57,9 +60,9 @@ export class OrderRepository {
                 })
                 return OrderReturn;
             } else {
-                return "Productos inexistentes o sin Stock"
+                throw new NotFoundException("Productos inexistentes o sin Stock");
             }
-        } else {return "Usuario Inexistente"}
+        } else {throw new NotFoundException("Usuario Inexistente")}
     }
 
     async getOrderById(orderId: string): Promise<Order> {

@@ -10,7 +10,7 @@ export class CategoryService {
         return await this.categoryRepository.getCategories();
     }
     
-    async preloadCategoriesSeed(): Promise<void> {
+    async preloadCategoriesSeed(): Promise<string> {
         return await this.categoryRepository.preloadCategoriesSeed() 
     }
 

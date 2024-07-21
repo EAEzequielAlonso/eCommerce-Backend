@@ -1,7 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import {v4 as uuid} from "uuid"
 import { Order } from "../../Orders/Entities/Order.entity";
-import { ApiProperty } from "@nestjs/swagger";
 
 @Entity({name: "users"})
 export class User {

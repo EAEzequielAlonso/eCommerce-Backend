@@ -10,18 +10,16 @@ export class AuthGuard implements CanActivate {
                
         const token = request.headers["authorization"]?.split(" ")[1] ?? "";
         
-        if (!token) throw new HttpException({status: 401, error: `Bearer token not found`}, 401)
-        
-            try {
-                const secret = process.env.JWT_SECRET;
-                const payload = this.jwtService.verify(token, { secret })
-                payload.iat = new Date (payload.iat * 1000)
-                payload.exp = new Date (payload.exp * 1000)
-                console.log("Payload en AuthGuard: ", payload)
-                request.user = payload; 
-                return true
-            }catch (err) {
-                throw new HttpException({status: 401, error: `Invalid token`}, 401)   
-            }
+        if (!token) throw new HttpException({status: 401, error: `No se ha encontrado el Bearer token`}, 401)
+        try {
+            const secret = process.env.JWT_SECRET;
+            const payload = this.jwtService.verify(token, { secret })
+            payload.iat = new Date (payload.iat * 1000)
+            payload.exp = new Date (payload.exp * 1000)
+            request.user = payload; 
+            return true
+        } catch (err) {
+            throw new HttpException({status: 401, error: `Token Invalido`}, 401)   
+        }
     }
 } 

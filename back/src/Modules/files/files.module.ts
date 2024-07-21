@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from '../Products/Entities/Product.entity';
 import { File } from './entities/file.entity';
 import { CloudinaryService } from './cloudinary.service';
-import { CloudinaryConfig } from 'src/config/cloudinary';
+import { CloudinaryConfig } from '../../config/cloudinary';
 import { FilesRepository } from './files.repository';
 
 @Module({

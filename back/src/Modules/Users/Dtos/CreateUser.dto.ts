@@ -1,5 +1,5 @@
-import { IsBoolean, IsEmail, IsEmpty, IsNotEmpty, IsNumber, IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator"
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger"
+import { IsEmail, IsEmpty, IsNotEmpty, IsNumber, IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator"
+import { ApiHideProperty, ApiProperty, ApiPropertyOptional } from "@nestjs/swagger"
 
 export class CreateUserDto {
     @IsNotEmpty()
@@ -43,12 +43,13 @@ export class CreateUserDto {
     })
     passwordConfirm: string
 
+    @ApiHideProperty()
     @IsEmpty()
     @IsOptional()
-    @ApiProperty({
-        description: "Este campo indica si el usuario es Administrador o no. Por default es 'false'. No es Obligatorio",
-        default: false,
-    })
+    // @ApiProperty({
+    //     description: "Este campo indica si el usuario es Administrador o no. Por default es 'false'. No es Obligatorio",
+    //     default: false,
+    // })
     isAdmin: boolean;
 
     @IsString()

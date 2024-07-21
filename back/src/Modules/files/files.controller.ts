@@ -1,9 +1,9 @@
-import { Controller, Post, Body, Param, Put, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseGuards, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, Param, Put, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseGuards, HttpStatus, ParseUUIDPipe } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/createFile.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '../Auth/Guards/Auth.guard';
-import { ErrorManager } from 'src/Utils/ErrorManager';
+import { ErrorManager } from '../../Utils/ErrorManager';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags("Files")
@@ -12,10 +12,10 @@ export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
   @Post()
-  create(@Body() createFileDto: CreateFileDto) {
+  create(@Body() createFile: CreateFileDto) {
 
     return ErrorManager ({
-              functionTry: () => this.filesService.create(createFileDto), 
+              functionTry: () => this.filesService.create(createFile), 
               message: "Error al intentar Cargar la Imagen"})
   }
 
@@ -23,19 +23,21 @@ export class FilesController {
   @Put('uploadImage/:id')
   @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor("file"))
-  updateImage(@Param('id') id: string, @UploadedFile(
-    new ParseFilePipe({
-      validators: [
-          new MaxFileSizeValidator ({
-              maxSize: 200000,
-              message: "El Archivo debe ser menor a 200Kb",
-          }),
-          new FileTypeValidator({
-              fileType: /(jpg|jpeg|png|webp)$/,
+  updateImage(
+    @Param('id', ParseUUIDPipe) id: string, 
+    @UploadedFile(
+        new ParseFilePipe({
+          validators: [
+              new MaxFileSizeValidator ({
+                  maxSize: 2000000,
+                  message: "El Archivo debe ser menor a 200Kb",
+              }),
+              new FileTypeValidator({
+                  fileType: /(.jpg|.jpeg|.png|.webp)$/,
+              })
+            ]
           })
-      ]
-  })
-  ) file: Express.Multer.File) {
+    ) file: Express.Multer.File) {
 
     return ErrorManager ({
           functionTry:() => this.filesService.update(id, file), 

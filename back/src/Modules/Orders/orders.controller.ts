@@ -3,7 +3,7 @@ import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './Dtos/CreateOrder.dto';
 import { Order } from './Entities/Order.entity';
 import { AuthGuard } from '../Auth/Guards/Auth.guard';
-import { ErrorManager } from 'src/Utils/ErrorManager';
+import { ErrorManager } from '../../Utils/ErrorManager';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags("Orders")

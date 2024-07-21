@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
+    "resolveJsonModule": true, // Habilita la importacion de modulos Json
+    "esModuleInterop": true,
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
+    "target": "es6",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",

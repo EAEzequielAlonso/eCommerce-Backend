@@ -1,17 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { loggerGlobal } from './Middlewares/logger.middleware';
-import { ProductsRepository } from './Modules/Products/Products.respository';
 import { CategoryRepository } from './Modules/Categories/Category.repository';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { UsersService } from './Modules/Users/Users.service';
+import { ProductsService } from './Modules/Products/Products.service';
 
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe({
+    // whitelist hace que solo se admitan las propiedades del DTO y ninguna adicional.
     whitelist:true,
+    // setea la forma en la que voy a mostrar los errores de los DTO
     exceptionFactory: (errors) => {
       const cleanErrors = errors.map (error => {
         return {property: error.property, constraints: error.constraints}
@@ -23,11 +26,14 @@ async function bootstrap() {
     }
   }))
 
+  // registra en consola las llamadas a las rutas del servidor
   app.use(loggerGlobal);
 
+  await app.get(UsersService).preloadUsersSeed()
+  
   await app.get(CategoryRepository).preloadCategoriesSeed()
 
-  await app.get(ProductsRepository).preloadProductsSeed()
+  await app.get(ProductsService).preloadProductsSeed()
 
   //genero el Document Builder donde preconfiguro los datos basicos 
   const swaggerConfig = new DocumentBuilder()
